@@ -50,7 +50,12 @@ def create_features(dataframe, alph_elems):
 def load_url(url):
 
     req = requests.get(url)
-    soup = BeautifulSoup(req.text, features="lxml")
+
+    try:
+        soup = BeautifulSoup(req.text, features="lxml")
+    except Exception:
+        soup = BeautifulSoup(req.text)
+
     html = soup.get_text()
 
     return html
