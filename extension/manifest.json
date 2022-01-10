@@ -1,0 +1,25 @@
+{
+  "name": "Language Detected!",
+  "description": "This chrome extension enables you to detect languages on a website using Information Retrieval and NLP techniques.",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage", "activeTab","scripting","tabs", "http://192.168.1.3:5000"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "/images/languages.png",
+      "32": "/images/languages32.png",
+      "128": "/images/languages128.png"
+    }
+  },
+  "icons": {
+    "16": "/images/languages.png",
+    "32": "/images/languages32.png",
+    "128": "/images/languages128.png"
+  },
+  "options_page": "options.html",
+  "host_permissions": ["http://192.168.1.3:5000/*"]
+}
