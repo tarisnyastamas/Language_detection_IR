@@ -1,8 +1,10 @@
 import pickle
 import string
 from itertools import permutations
-
 import collections
+
+from bs4 import BeautifulSoup
+import requests
 
 def load_from_pkl_file(pkl_path):
     with open(pkl_path, 'rb') as file:
@@ -44,3 +46,18 @@ def create_features(dataframe, alph_elems):
     dataframe['num_consonants'] = dataframe['Sentences'].apply(lambda x : sum([any(c in aa for c in  alph_elems['consonants']) for aa in x.split()]))
     
     return dataframe
+
+def load_url(url):
+
+    req = requests.get(url)
+    soup = BeautifulSoup(req.text)
+    html = soup.get_text()
+
+    return html
+
+def cleaning(html):
+
+    filtered_text = html.replace("\t", "").replace("\r", "").replace("\n", "")
+
+    return filtered_text
+

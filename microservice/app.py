@@ -6,7 +6,7 @@ from flask import request
 import pandas as pd
 from dotenv import find_dotenv, load_dotenv
 
-from utils import generate_alphabet_elements, load_from_pkl_file, create_features
+from utils import generate_alphabet_elements, load_from_pkl_file, create_features, load_url, cleaning
 
 
 class LanguageDetectorService():
@@ -42,6 +42,21 @@ class LanguageDetectorService():
 
         @self.app.route('/detect/<string:text>')
         def changeroute(text):
+
+            #Gábor edit nr. 2
+            #Getting the requested url from GET parameter
+            url = request.args.get('url')
+
+
+            #Gábor edit nr. 2
+            #Loading page
+            html = load_url(url)
+
+            #Gábor edit nr. 2
+            #Cleaning HTML
+            cleanedText = cleaning(html)
+
+            text = cleanedText
 
             model_selection_str = request.args.get('model')
 
