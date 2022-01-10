@@ -9,6 +9,7 @@ docker run -it \
     --rm \
     -p 5000:5000 \
     --env-file .env \
+    --name language-detector-service
     language-detector-service
 ```
 
