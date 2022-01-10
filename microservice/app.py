@@ -1,4 +1,5 @@
 import json
+import datetime
 
 import validators
 from flask import Flask
@@ -14,6 +15,7 @@ class LanguageDetectorService():
     def __init__(self):
 
         # Set config values
+        print(f'{datetime.datetime.now()} [ INFO ] Setting config values, building alphabet element, loading models...')
         self.config = Config()
 
         # Load models
@@ -24,6 +26,7 @@ class LanguageDetectorService():
         self.models = {}
         self.models['gradient_boost'] = load_from_pkl_file(self.config.GRAD_BOOST_MODEL_PATH)
         self.models['decision_tree'] = load_from_pkl_file(self.config.DECISION_TREE_MODEL_PATH)
+        print(f'{datetime.datetime.now()} [ INFO ] Loaded {list(self.models.keys())} models')
 
         self.app = Flask(__name__)
 
@@ -36,14 +39,14 @@ class LanguageDetectorService():
             url = request.args.get('url')
             if url is not None:
                 if validators.url(url):
-                    print(f" [ INFO ] Working with URL: {url}")
+                    print(f'{datetime.datetime.now()} [ INFO ] Working with URL: {url}')
                     html = load_url(url)
                     text = cleaning(html)
                 else:
-                    print(f"[ WARNING ] URL is invalid, working with input: '{input}'")
+                    print(f"{datetime.datetime.now()} [ WARNING ] URL is invalid, working with input: '{input}'")
                     text = input
             else:
-                print(f" [ INFO ] Working with simple text: {input}")
+                print(f"{datetime.datetime.now()} [ INFO ] Working with simple text: {input}")
                 text = input
 
             # Check model selector string
@@ -51,11 +54,12 @@ class LanguageDetectorService():
 
             # Detect the language of the text/website
             if url is None:
-                print(f" [ INFO ] Detecting the language of this text: {text}")
+                print(f"{datetime.datetime.now()} [ INFO ] Detecting the language of this text: {text}")
             else:
-                print(f" [ INFO ] Detecting the language of this website: {url}")
+                print(f"{datetime.datetime.now()} [ INFO ] Detecting the language of this website: {url}")
 
             result = self.detect_language(text, model_selection_str)       # 'grad_boost' or 'decision_tree'
+            print(f'{datetime.datetime.now()} [ OUTPUT ] Detected language: {result}')
 
             # Create a response and return it
             response = {
@@ -64,7 +68,7 @@ class LanguageDetectorService():
             return json.dumps(response)
 
     def start(self):
-        print(f' [ INFO ] Starting language detection service at: http://{self.config.HOST}:{self.config.PORT}/')
+        print(f'{datetime.datetime.now()} [ INFO ] Starting language detection service at: http://{self.config.HOST}:{self.config.PORT}/')
         self.app.run(host=self.config.HOST, port=self.config.PORT, debug=self.config.DEBUG)
 
     def transform_input_text(self, text):
@@ -90,9 +94,9 @@ class LanguageDetectorService():
     def select_model(self, model_selection_str):
         try:
             if self.models[model_selection_str] is not None:
-                print(f" [ INFO ] Using '{model_selection_str}' model")
+                print(f"{datetime.datetime.now()} [ INFO ] Using '{model_selection_str}' model")
         except KeyError:
-            print(f" [ WARNING ] '{model_selection_str}' model is not found. Using default model: 'gradient_boost'")
+            print(f"{datetime.datetime.now()} [ WARNING ] '{model_selection_str}' model is not found. Using default model: 'gradient_boost'")
             model_selection_str = 'gradient_boost'
         return model_selection_str
 
